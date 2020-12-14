@@ -27,19 +27,17 @@ const Header = () => {
       <Container>
         <Flex>
           <HeaderTextGroup>
-            <Subtitle>Personal Finance</Subtitle>
             <h1>
-              All your money,
+              Enable Discussions;
               <br />
-              one account
+              Maintain Your Privacy
             </h1>
             <h2>
-              We're building next generation personal finance tools. Sign up to
-              get early access.
+              Fast and Full of Great Features.
             </h2>
             <HeaderForm onSubmit={handleSubmit}>
               <HeaderInput placeholder="Your email" />
-              <HeaderButton>Early access</HeaderButton>
+              <HeaderButton>Request Access</HeaderButton>
             </HeaderForm>
             <FormSubtitle>
               Already have a beta account?{" "}
@@ -65,12 +63,6 @@ const HeaderWrapper = styled.header`
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5vw));
   @media (max-width: ${props => props.theme.screen.md}) {
   }
-`
-const Subtitle = styled.h5`
-  font-size: 16px;
-  color: ${props => props.theme.color.accent};
-  letter-spacing: 0px;
-  margin-bottom: 16px;
 `
 
 const HeaderTextGroup = styled.div`
