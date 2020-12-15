@@ -4,9 +4,9 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter SaaS Marketing`,
-    description: `A simple one page marketing starter for saas companies.`,
-    author: `Keegan Burkett`,
+    title: `Enable Discussions`,
+    description: `Performance and Privacy Oriented Commenting For Your Users.`,
+    author: `Giorgio Delgado`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -41,7 +41,7 @@ module.exports = {
         background_color: `#663399`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`,
+        icon: `src/images/parlezvous-icon.png`,
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
