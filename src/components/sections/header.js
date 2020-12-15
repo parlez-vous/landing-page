@@ -1,25 +1,35 @@
-import React from "react"
-import styled from "styled-components"
-import { graphql, useStaticQuery, Link } from "gatsby"
-import Img from "gatsby-image"
+import React, { useState } from "react"
+import styled, { keyframes } from "styled-components"
 
 import { Container } from "../global"
 
 const Header = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      file(sourceInstanceName: { eq: "product" }, name: { eq: "green-skew" }) {
-        childImageSharp {
-          fluid(maxWidth: 1000) {
-            ...GatsbyImageSharpFluid_tracedSVG
-          }
-        }
-      }
-    }
-  `)
+  const [formState, setFormState] = useState({
+    submitting: false,
+    email: '',
+    message: null,
+  })
 
   const handleSubmit = event => {
     event.preventDefault()
+
+    setFormState({ ...formState, submitting: true })
+
+    fetch('https://us-central1-newsletter-app-190ba.cloudfunctions.net/newsletter/subscribe?list=parlezvous', {
+      method: 'post',
+      body: JSON.stringify({ email: formState.email }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      setFormState({ ...formState, submitting: false })
+
+      if (response.status === 200) {
+        setFormState({ ...formState, message: 'You\'re now subscribed!' })
+      } else {
+        setFormState({ ...formState, message: 'Opps! Something went wrong.' })
+      }
+    })
   }
 
   return (
@@ -36,18 +46,26 @@ const Header = () => {
               Fast and Full of Great Features.
             </h2>
             <HeaderForm onSubmit={handleSubmit}>
-              <HeaderInput placeholder="Your email" />
-              <HeaderButton>Request Access</HeaderButton>
+              <HeaderInput
+                placeholder="Your email"
+                value={formState.email}
+                onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+              />
+              <FormButtonContainer>
+                <HeaderButton>
+                  <span style={{ visibility: formState.submitting ? 'hidden' : 'visible' }}>Request Access</span>
+                  <LoadingDonut formSubmitting={formState.submitting} />
+                </HeaderButton>
+                { formState.message &&
+                    <FormMessage>{formState.message}</FormMessage>
+                }
+              </FormButtonContainer>
             </HeaderForm>
             <FormSubtitle>
               Already have a beta account?{" "}
-              <FormSubtitleLink to="/">Sign in</FormSubtitleLink>
+              <FormSubtitleLink href="https://app.parlezvous.io/signin" target="_blank">Sign in</FormSubtitleLink>
             </FormSubtitle>
           </HeaderTextGroup>
-          <ImageWrapper>
-            <StyledImage fluid={data.file.childImageSharp.fluid} />
-            <br />
-          </ImageWrapper>
         </Flex>
       </Container>
     </HeaderWrapper>
@@ -55,6 +73,35 @@ const Header = () => {
 }
 
 export default Header
+
+
+const FormButtonContainer = styled.div`
+  margin-left: 8px;
+  position: relative;
+
+  @media (max-width: ${props => props.theme.screen.xs}) {
+    margin-left: 0;
+
+    display: flex;
+    justify-content: space-between;
+
+    & > span {
+      position: inherit;
+      width: inherit;
+    }
+  }
+`
+
+const FormMessage = styled.span`
+  color: #098c8ca6;
+  position: absolute;
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  width: 100%;
+}
+`
 
 const HeaderWrapper = styled.header`
   background-color: #f8f8f8;
@@ -103,6 +150,30 @@ const Flex = styled.div`
   }
 `
 
+
+const donutSpin = keyframes`
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+`
+
+const LoadingDonut = styled.span`
+  display: ${props => props.formSubmitting ? 'inline-block' : 'none'};
+  position: absolute;
+  top: 15px;
+  right: 42%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: rgb(208, 208, 208);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: ${donutSpin} 1.2s linear infinite;
+`
+
 const HeaderForm = styled.form`
   display: flex;
   flex-direction: row;
@@ -117,7 +188,7 @@ const FormSubtitle = styled.span`
   ${props => props.theme.font_size.xxsmall}
 `
 
-const FormSubtitleLink = styled(Link)`
+const FormSubtitleLink = styled.a`
   color: ${props => props.theme.color.secondary};
   padding-bottom: 1px;
   margin-left: 8px;
@@ -154,12 +225,12 @@ const HeaderInput = styled.input`
 
 const HeaderButton = styled.button`
   font-weight: 500;
+  position: relative;
   font-size: 14px;
   color: white;
   letter-spacing: 1px;
   height: 60px;
   display: block;
-  margin-left: 8px;
   text-transform: uppercase;
   cursor: pointer;
   white-space: nowrap;
@@ -180,21 +251,4 @@ const HeaderButton = styled.button`
     margin-left: 0;
   }
 `
-const ImageWrapper = styled.div`
-  justify-self: end;
-  align-self: center;
-  @media (max-width: ${props => props.theme.screen.md}) {
-    justify-self: center;
-  }
-`
 
-const StyledImage = styled(Img)`
-  width: 500px;
-  @media (max-width: ${props => props.theme.screen.md}) {
-    width: 400px;
-  }
-  @media (max-width: ${props => props.theme.screen.sm}) {
-    width: 300px;
-    display: none;
-  }
-`
