@@ -8,12 +8,14 @@ import Header from "../components/sections/header"
 // import Features from "../components/sections/features"
 import Footer from "../components/sections/footer"
 // import GetStarted from "../components/sections/getstarted"
+import Blurb from "../components/sections/blurb"
 
 const IndexPage = () => (
   <Layout>
     <SEO title="ParlezVous" />
     <Navigation />
     <Header />
+    <Blurb />
     {/*<Features />*/}
     {/*<GetStarted />*/}
     <Footer />
