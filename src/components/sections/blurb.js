@@ -19,7 +19,6 @@ export default () =>
     <Text>... And the best part:</Text>
     <br />
     <h3>Your data is <strong>yours.</strong> Period.</h3>
-    <Text>No gimmicks.</Text>
   </ParagraphContainer>
 
 const Text = styled.p`

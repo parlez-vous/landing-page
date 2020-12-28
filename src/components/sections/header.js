@@ -27,7 +27,7 @@ const Header = () => {
       if (response.status === 200) {
         setFormState({ ...formState, message: 'You\'re now subscribed!' })
       } else {
-        setFormState({ ...formState, message: 'Opps! Something went wrong.' })
+        setFormState({ ...formState, message: 'Oops! Something went wrong.' })
       }
     })
   }
@@ -52,7 +52,7 @@ const Header = () => {
                 onChange={(e) => setFormState({ ...formState, email: e.target.value })}
               />
               <FormButtonContainer>
-                <HeaderButton>
+                <HeaderButton disabled={formState.email.length === 0}>
                   <span style={{ visibility: formState.submitting ? 'hidden' : 'visible' }}>Request Access</span>
                   <LoadingDonut formSubmitting={formState.submitting} />
                 </HeaderButton>
@@ -242,11 +242,19 @@ const HeaderButton = styled.button`
   border-color: initial;
   border-image: initial;
   outline: 0px;
+
   &:hover {
     box-shadow: rgba(110, 120, 152, 0.22) 0px 2px 10px 0px;
   }
+
+  &:disabled {
+    background: rgba(9, 140, 140, .6);
+    cursor: not-allowed;
+  }
+
   @media (max-width: ${props => props.theme.screen.md}) {
   }
+
   @media (max-width: ${props => props.theme.screen.sm}) {
     margin-left: 0;
   }
